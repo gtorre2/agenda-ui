@@ -1,0 +1,78 @@
+<div class="container">
+
+  <form autocomplete="off" (ngSubmit)="pesquisar()">
+    <div class="p-grid">
+
+        <div class="p-col-12">
+          <h1>Agenda</h1>
+        </div>
+    
+        <div class="p-col-12 p-fluid">
+          <label>Nome</label>
+          <input pInputText type="text" name="nome" 
+            [(ngModel)]="filtro.nome">
+        </div>
+    
+        <div class="p-col-12">
+          <button pButton type="submit" label="Pesquisar"></button>
+        </div>
+        
+    </div>
+  </form>  
+      
+  <div class="p-grid">
+    <div class="p-col-12">
+      <p-table [value]="agendas" [responsive]="true"
+                [paginator]="true" [rows]="filtro.itensPorPagina"
+                [lazy]="true" [totalRecords]="totalRegistros"
+                (onLazyLoad)="aoMudarPagina($event)"
+                #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Pessoa</th>
+            <th>Telefone</th>
+            <th>Data Nascimento</th>
+            <th class="col-acoes"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-agenda>
+          <tr>
+            <td>
+              <span class="p-column-title">Pessoa</span>
+              {{ agenda.nome }}
+            </td>
+
+            <td>
+              <span class="p-column-title">Telefone</span>
+              {{ agenda.telefone }}
+            </td>
+
+            <td class="col-data">
+              <span class="p-column-title">Data Nascimento</span>
+              {{ agenda.dataNascimento | date:'dd/MM/y' }}
+            </td>
+
+            <td class="col-acoes">
+              <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+                [routerLink]="['/agenda', agenda.codigo]"></a>
+              <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"
+                (click)="confirmarExclusao(agenda)"
+                [disabled]="naoTemPermissao('ROLE_REMOVER_AGENDA')">
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              Nenhuma agenda encontrada
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <a pButton label="Nova Agenda" routerLink="/agenda/novo"></a>
+
+</div>
